@@ -1,7 +1,8 @@
 class Solution {
     public boolean lemonadeChange(int[] bills) {
-        int count5 = 0;  // $5 ke bills ka count 
-        int count10 = 0; // $10 ke bills ka count
+        int count5 = 0;  // $5 ke bills ka count kara ya pr 
+        int count10 = 0; // $10 ke bills kara ya pr count
+        // 20 count hum ne nhi baanya kyunki 20 ka change dene me kabhi kaam nhi aata
 
         for (int bill : bills) {
             // Case 1: Customer ne $5 ka bill diya
