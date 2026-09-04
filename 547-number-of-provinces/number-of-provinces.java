@@ -4,30 +4,26 @@ class Solution {
         boolean[] vis = new boolean[n];
         int provinces = 0;
 
+        // Har city par check karo
         for (int i = 0; i < n; i++) {
-            // Agar city pehle visit nahi hui, naya province mila
+            // Agar city pehle kisi group me visit nahi hui
             if (!vis[i]) {
-                provinces++;
-                bfs(i, isConnected, vis);
+                provinces++; // Naya province mila
+                dfs(i, isConnected, vis); // Uske saare direct/indirect dosto ko mark karo
             }
         }
+
         return provinces;
     }
 
-    private void bfs(int start, int[][] isConnected, boolean[] vis) {
-        Queue<Integer> q = new LinkedList<>();
-        q.add(start);
-        vis[start] = true;
+    private void dfs(int node, int[][] isConnected, boolean[] vis) {
+        vis[node] = true;
 
-        while (!q.isEmpty()) {
-            int node = q.poll();
-
-            // Direct matrix row traverse karke padosi dhoondho
-            for (int neighbor = 0; neighbor < isConnected.length; neighbor++) {
-                if (isConnected[node][neighbor] == 1 && !vis[neighbor]) {
-                    vis[neighbor] = true;
-                    q.add(neighbor);
-                }
+        // Current city (node) ke saare padosi check karo
+        for (int neighbor = 0; neighbor < isConnected.length; neighbor++) {
+            // Connection hai (1) aur abhi tak visit nahi hua
+            if (isConnected[node][neighbor] == 1 && !vis[neighbor]) {
+                dfs(neighbor, isConnected, vis); // Depth me jao
             }
         }
     }
