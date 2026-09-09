@@ -1,37 +1,24 @@
-/**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode() {}
- *     TreeNode(int val) { this.val = val; }
- *     TreeNode(int val, TreeNode left, TreeNode right) {
- *         this.val = val;
- *         this.left = left;
- *         this.right = right;
- *     }
- * }
- */
 class Solution {
     public List<Integer> postorderTraversal(TreeNode root) {
+        List<Integer> postorder = new ArrayList<>();
+        
+        // Base case: empty tree check
         if (root == null) {
-            return Collections.emptyList();
+            return postorder;
         }
 
-        // Use Deque/ArrayDeque instead of legacy, synchronized java.util.Stack
+        // Two stacks using modern Deque / ArrayDeque
         Deque<TreeNode> traversalStack = new ArrayDeque<>();
         Deque<TreeNode> resultStack = new ArrayDeque<>();
 
         traversalStack.push(root);
 
-        // Process nodes: Root -> Right -> Left into traversalStack,
-        // so resultStack stores: Root -> Right -> Left
+        // Modified Pre-order traversal: Root -> Right -> Left
         while (!traversalStack.isEmpty()) {
             TreeNode current = traversalStack.pop();
             resultStack.push(current);
 
-            // Push left first so right is popped first from traversalStack
+            // Left pehle push hoga taaki pop hone par Right pehle nikle
             if (current.left != null) {
                 traversalStack.push(current.left);
             }
@@ -40,10 +27,7 @@ class Solution {
             }
         }
 
-        // Pre-allocate ArrayList capacity to avoid resizing
-        List<Integer> postorder = new ArrayList<>(resultStack.size());
-
-        // Popping resultStack produces: Left -> Right -> Root
+        // Result stack ko pop karke final postorder traversal banta hai: Left -> Right -> Root
         while (!resultStack.isEmpty()) {
             postorder.add(resultStack.pop().val);
         }
