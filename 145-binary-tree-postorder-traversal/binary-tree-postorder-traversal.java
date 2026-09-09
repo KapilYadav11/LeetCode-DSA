@@ -19,27 +19,35 @@ class Solution {
             return Collections.emptyList();
         }
 
-        // LinkedList allows O(1) prepend operations (addFirst)
-        LinkedList<Integer> result = new LinkedList<>();
-        // ArrayDeque is faster and unsynchronized compared to legacy java.util.Stack
-        Deque<TreeNode> stack = new ArrayDeque<>();
+        // Use Deque/ArrayDeque instead of legacy, synchronized java.util.Stack
+        Deque<TreeNode> traversalStack = new ArrayDeque<>();
+        Deque<TreeNode> resultStack = new ArrayDeque<>();
 
-        stack.push(root);
+        traversalStack.push(root);
 
-        // Modified preorder: Root -> Right -> Left
-        // Inserting at the front reverses it into Postorder: Left -> Right -> Root
-        while (!stack.isEmpty()) {
-            TreeNode curr = stack.pop();
-            result.addFirst(curr.val);
+        // Process nodes: Root -> Right -> Left into traversalStack,
+        // so resultStack stores: Root -> Right -> Left
+        while (!traversalStack.isEmpty()) {
+            TreeNode current = traversalStack.pop();
+            resultStack.push(current);
 
-            if (curr.left != null) {
-                stack.push(curr.left);
+            // Push left first so right is popped first from traversalStack
+            if (current.left != null) {
+                traversalStack.push(current.left);
             }
-            if (curr.right != null) {
-                stack.push(curr.right);
+            if (current.right != null) {
+                traversalStack.push(current.right);
             }
         }
 
-        return result;
+        // Pre-allocate ArrayList capacity to avoid resizing
+        List<Integer> postorder = new ArrayList<>(resultStack.size());
+
+        // Popping resultStack produces: Left -> Right -> Root
+        while (!resultStack.isEmpty()) {
+            postorder.add(resultStack.pop().val);
+        }
+
+        return postorder;
     }
 }
