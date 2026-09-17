@@ -7,14 +7,10 @@
  *     TreeNode(int x) { val = x; }
  * }
  */
-import java.util.*; // Queue, LinkedList etc. ke liye import
+ public class Codec {
 
-public class Codec {
-
-    // ============================================================
     // SERIALIZE
     // Binary Tree -> String
-    // ============================================================
 
     public String serialize(TreeNode root) {
 
@@ -63,12 +59,8 @@ public class Codec {
         return s.toString();
     }
 
-
-    // ============================================================
     // DESERIALIZE
     // String -> Binary Tree
-    // ============================================================
-
     public TreeNode deserialize(String data) {
 
         // Agar data empty ya null hai, to tree bhi empty hai
@@ -97,11 +89,7 @@ public class Codec {
             // Queue se ek parent node nikalo
             TreeNode node = q.poll();
 
-
-            // ====================================================
             // LEFT CHILD
-            // ====================================================
-
             // Check karo ki current value null node "#" nahi hai
             if (!values[i].equals("#")) {
 
@@ -120,11 +108,7 @@ public class Codec {
             // Ab next value par move karo
             i++;
 
-
-            // ====================================================
             // RIGHT CHILD
-            // ====================================================
-
             // Check karo ki array ke andar value available hai
             // aur value "#" nahi hai
             if (i < values.length && !values[i].equals("#")) {
@@ -148,6 +132,11 @@ public class Codec {
         return root;
     }
 }
+
+
+
+
+
 
 // Your Codec object will be instantiated and called as such:
 // Codec ser = new Codec();
