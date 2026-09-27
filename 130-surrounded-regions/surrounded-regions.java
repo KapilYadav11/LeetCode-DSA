@@ -1,66 +1,66 @@
 class Solution {
-    private void dfs(int row, int col, int[][] vis, char[][] mat, int[] dr, int[] dc){
-        vis[row][col] = 1;
-        int n = mat.length;
-        int m = mat[0].length;
 
-        for(int k = 0; k < 4; k++){
-            //next cell compute kara
-            int nr = row + dr[k];
-            int nc = col + dc[k];
-
-            if(nr >= 0 && nr < n && nc >= 0 && nc < m &&
-               vis[nr][nc] == 0 && mat[nr][nc] == 'O'){
-                dfs(nr, nc, vis, mat, dr, dc);
-               }
-        }
-    }
     public void solve(char[][] board) {
-        if(board == null || board.length == 0 || board[0].length == 0){
-            return;
-        }
-        int n = board.length;
-        int m = board[0].length;
 
-        int[] dr = {-1, 0, 1, 0};
-        int[] dc = {0, 1, 0, -1};
+        int rows = board.length;
+        int cols = board[0].length;
 
-        int[][] vis = new int[n][m];
+        // Top and bottom boundaries
+        for (int col = 0; col < cols; col++) {
 
-        for(int j = 0; j < m; j++){// isme traverse kr rahe hai first and last row ko
-            // DFS from top boundary 'O'
-            if(vis[0][j] == 0 && board[0][j] == 'O'){
-                dfs(0, j, vis, board, dr, dc);
+            if (board[0][col] == 'O') {
+                dfs(0, col, board);
             }
 
-            //DFS from bottom boundary 'O'
-            if(vis[n-1][j] == 0 && board[n-1][j] == 'O'){
-                dfs(n-1, j, vis, board, dr, dc);
+            if (board[rows - 1][col] == 'O') {
+                dfs(rows - 1, col, board);
             }
         }
 
-        for(int i = 0; i < n; i++){// isme hum first and last column ko traverse kr rahe hain
-            
-            // DFS from the left boundary 'O'
-            if(vis[i][0] == 0 && board[i][0] == 'O'){
-                dfs(i, 0, vis, board, dr, dc);
+        // Left and right boundaries
+        for (int row = 0; row < rows; row++) {
+
+            if (board[row][0] == 'O') {
+                dfs(row, 0, board);
             }
 
-            //DFS from right boundary 'O'
-            if(vis[i][m-1] == 0 && board[i][m-1] == 'O'){
-                dfs(i, m-1, vis, board, dr, dc);
+            if (board[row][cols - 1] == 'O') {
+                dfs(row, cols - 1, board);
             }
         }
 
-        //ab isme flip kr sabhi unvisited 'O' to 'X'
-        for(int i = 0; i < n; i++){
-            for(int j = 0; j < m; j++){
+        // Convert surrounded O -> X
+        // Restore safe S -> O
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
 
-                //convert enclosed 'O' to 'X'
-                if(vis[i][j] == 0 && board[i][j] == 'O'){
-                    board[i][j] = 'X';
+                if (board[row][col] == 'O') {
+                    board[row][col] = 'X';
+                }
+
+                else if (board[row][col] == 'S') {
+                    board[row][col] = 'O';
                 }
             }
         }
+    }
+
+    private void dfs(int row, int col, char[][] board) {
+
+        if (row < 0 ||
+            row >= board.length ||
+            col < 0 ||
+            col >= board[0].length ||
+            board[row][col] != 'O') {
+            return;
+        }
+
+        // Mark as safe / visited
+        board[row][col] = 'S';
+
+        dfs(row - 1, col, board); // up
+        dfs(row + 1, col, board); // down
+        dfs(row, col - 1, board); // left
+        dfs(row, col + 1, board); // right
     }
 }
