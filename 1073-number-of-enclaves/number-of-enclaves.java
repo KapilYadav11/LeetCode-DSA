@@ -1,52 +1,65 @@
 class Solution {
+
     public int numEnclaves(int[][] grid) {
-        if(grid == null || grid.length == 0 || grid[0].length == 0){
-            return 0;
-        }
-        int n = grid.length;
-        int m = grid[0].length;
-        boolean[][] vis = new boolean[n][m];
-        Queue<int[]> q = new LinkedList<>();
 
-        for(int i = 0; i < n; i++){
-            for(int j = 0; j < m; j++){
-                if(i == 0 || j == 0 || i == n-1 || j == m-1){ //check kara if current lies on boundary
-                    if(grid[i][j] == 1 && !vis[i][j]){//agar boundary cell is land , mark visited and push to the queue
-                        vis[i][j] = true;
-                        q.add(new int[]{i, j});
-                    }
+        int rows = grid.length;
+        int cols = grid[0].length;
+
+        // Top and bottom boundaries
+        for (int col = 0; col < cols; col++) {
+
+            if (grid[0][col] == 1) {
+                dfs(0, col, grid);
+            }
+
+            if (grid[rows - 1][col] == 1) {
+                dfs(rows - 1, col, grid);
+            }
+        }
+
+        // Left and right boundaries
+        for (int row = 0; row < rows; row++) {
+
+            if (grid[row][0] == 1) {
+                dfs(row, 0, grid);
+            }
+
+            if (grid[row][cols - 1] == 1) {
+                dfs(row, cols - 1, grid);
+            }
+        }
+
+        // Count remaining land cells
+        int count = 0;
+
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+
+                if (grid[row][col] == 1) {
+                    count++;
                 }
             }
         }
 
-        int[] delRow = {-1, 0, 1, 0};
-        int[] delCol = {0, 1, 0, -1};
+        return count;
+    }
 
-        while(!q.isEmpty()){
-            int[] curr = q.poll();
-            int row = curr[0];
-            int col = curr[1];
+    private void dfs(int row, int col, int[][] grid) {
 
-            for(int k = 0; k < 4; k++){
-                int nrow = row + delRow[k];
-                int ncol = col + delCol[k];
-
-                if(nrow >= 0 && nrow < n && ncol >= 0 && ncol < m && !vis[nrow][ncol] && grid[nrow][ncol] == 1){
-                    vis[nrow][ncol] = true;
-                    q.add(new int[]{nrow, ncol});
-                }
-            }
+        if (row < 0 ||
+            row >= grid.length ||
+            col < 0 ||
+            col >= grid[0].length ||
+            grid[row][col] == 0) {
+            return;
         }
-        
-        // Count land cells that are not visited (i.e., enclaves)
-        int cnt = 0;
-        for(int i = 0; i < n; i++){
-            for(int j = 0; j < m; j++){
-                if(grid[i][j] == 1 && !vis[i][j]){
-                    cnt++;
-                }
-            }
-        }
-        return cnt++;
+
+        // Mark as visited by converting 1 -> 0
+        grid[row][col] = 0;
+
+        dfs(row - 1, col, grid);
+        dfs(row + 1, col, grid);
+        dfs(row, col - 1, grid);
+        dfs(row, col + 1, grid);
     }
 }
