@@ -5,31 +5,39 @@ class Solution {
         int n = s.length();
         int m = t.length();
 
-        boolean[][] dp = new boolean[n + 1][m + 1];
+        boolean[] prev = new boolean[m + 1];
 
-        // Empty s is a subsequence of any t
+        // Empty s is a subsequence of any prefix of t
         for (int j = 0; j <= m; j++) {
-            dp[0][j] = true;
+            prev[j] = true;
         }
 
         for (int i = 1; i <= n; i++) {
+
+            boolean[] curr = new boolean[m + 1];
+
+            // s is non-empty, so it cannot be a subsequence
+            // of empty t
+            curr[0] = false;
 
             for (int j = 1; j <= m; j++) {
 
                 // Characters match
                 if (s.charAt(i - 1) == t.charAt(j - 1)) {
 
-                    dp[i][j] = dp[i - 1][j - 1];
+                    curr[j] = prev[j - 1];
 
                 } 
                 // Characters don't match
                 else {
 
-                    dp[i][j] = dp[i][j - 1];
+                    curr[j] = curr[j - 1];
                 }
             }
+
+            prev = curr;
         }
 
-        return dp[n][m];
+        return prev[m];
     }
 }
